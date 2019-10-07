@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:transformer_page_view/transformer_page_view.dart';
+import 'package:provider/provider.dart';
+import 'package:zhihu_daily/model/global_model.dart';
+import 'package:zhihu_daily/model/main_model.dart';
+import 'package:zhihu_daily/widget/banner.dart';
 
 class MainPage extends StatelessWidget {
   _collection() {}
@@ -6,8 +11,11 @@ class MainPage extends StatelessWidget {
   _downloadOffline() {}
 
   _login() {}
+
   @override
   Widget build(BuildContext context) {
+    final model = Provider.of<MainPageModel>(context);
+    model.setContext(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("首页"),
@@ -114,34 +122,34 @@ class MainPage extends StatelessWidget {
                 widthFactor: 1.0,
                 heightFactor: 1.0,
                 child: Container(
-                    padding: EdgeInsets.only(
-                        left: 20, top: 12, right: 15, bottom: 12),
-                    color: Colors.blueGrey[100],
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.home,
+                  padding:
+                      EdgeInsets.only(left: 20, top: 12, right: 15, bottom: 12),
+                  color: Colors.blueGrey[100],
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.home,
+                          color: Colors.blue,
+                          size: 22,
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text(
+                          "首页",
+                          style: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid,
+                            fontSize: 16,
                             color: Colors.blue,
-                            size: 22,
                           ),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Text(
-                            "首页",
-                            style: TextStyle(
-                              decorationStyle: TextDecorationStyle.solid,
-                              fontSize: 16,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
                 ),
               ),
             ],
@@ -149,7 +157,16 @@ class MainPage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Text("内容"),
+        child: model.latestDailyBean == null ? Text("") : TransformerPageView(
+          loop: true,
+          itemCount: model.latestDailyBean == null ? 0 : model.latestDailyBean.topStories.length,
+          itemBuilder: (context, index) {
+            return Container(
+              alignment: Alignment.topCenter,
+              child: Image.network("${model.latestDailyBean.topStories[index].image}"),
+            );
+          },
+        ),
       ),
     );
   }

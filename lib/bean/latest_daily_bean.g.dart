@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'daily_news_bean.dart';
+part of 'latest_daily_bean.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DailyNewsBean _$EntityFromJson(Map<String, dynamic> json) {
-  return DailyNewsBean(
+latest_daily_bean _$latest_daily_beanFromJson(Map<String, dynamic> json) {
+  return latest_daily_bean(
     json['date'] as String,
     (json['stories'] as List)
         ?.map((e) =>
@@ -20,7 +20,8 @@ DailyNewsBean _$EntityFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$EntityToJson(DailyNewsBean instance) => <String, dynamic>{
+Map<String, dynamic> _$latest_daily_beanToJson(latest_daily_bean instance) =>
+    <String, dynamic>{
       'date': instance.date,
       'stories': instance.stories,
       'top_stories': instance.topStories,

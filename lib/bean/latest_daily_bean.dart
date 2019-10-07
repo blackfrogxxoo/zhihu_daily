@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'daily_news_bean.g.dart';
+part 'latest_daily_bean.g.dart';
 
 
 @JsonSerializable()
-class DailyNewsBean extends Object {
+class latest_daily_bean extends Object {
 
   @JsonKey(name: 'date')
   String date;
@@ -15,11 +15,11 @@ class DailyNewsBean extends Object {
   @JsonKey(name: 'top_stories')
   List<Top_stories> topStories;
 
-  DailyNewsBean(this.date,this.stories,this.topStories,);
+  latest_daily_bean(this.date,this.stories,this.topStories,);
 
-  factory DailyNewsBean.fromJson(Map<String, dynamic> srcJson) => _$EntityFromJson(srcJson);
+  factory latest_daily_bean.fromJson(Map<String, dynamic> srcJson) => _$latest_daily_beanFromJson(srcJson);
 
-  Map<String, dynamic> toJson() => _$EntityToJson(this);
+  Map<String, dynamic> toJson() => _$latest_daily_beanToJson(this);
 
 }
 
