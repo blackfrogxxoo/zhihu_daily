@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:transformer_page_view/transformer_page_view.dart';
 import 'package:provider/provider.dart';
-import 'package:zhihu_daily/model/global_model.dart';
+import 'package:transformer_page_view/transformer_page_view.dart';
 import 'package:zhihu_daily/model/main_model.dart';
-import 'package:zhihu_daily/widget/banner.dart';
+import 'package:zhihu_daily/widget/list_page.dart';
 
 class MainPage extends StatelessWidget {
+  MainPageModel model;
+
   _collection() {}
 
   _downloadOffline() {}
@@ -14,7 +15,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<MainPageModel>(context);
+    model = Provider.of<MainPageModel>(context);
     model.setContext(context);
     return Scaffold(
       appBar: AppBar(
@@ -156,17 +157,134 @@ class MainPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: model.latestDailyBean == null ? Text("") : TransformerPageView(
-          loop: true,
-          itemCount: model.latestDailyBean == null ? 0 : model.latestDailyBean.topStories.length,
-          itemBuilder: (context, index) {
-            return Container(
-              alignment: Alignment.topCenter,
-              child: Image.network("${model.latestDailyBean.topStories[index].image}"),
-            );
-          },
+      body: model.latestDailyBean == null
+          ? Text("")
+          : ListPage(
+              model.latestDailyBean.stories,
+              headerList: model.latestDailyBean.topStories,
+              itemWidgetCreator: getItemWidget,
+              headerCreator: (BuildContext context, int position) {
+                if (position == 0) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width * 9 / 16,
+                    child: TransformerPageView(
+                      loop: true,
+                      itemCount: model.latestDailyBean == null
+                          ? 0
+                          : model.latestDailyBean.topStories.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          alignment: Alignment.topCenter,
+                          child: Image.network(
+                            model.latestDailyBean.topStories[index].image,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width * 9 / 16,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                } else if (position == 1) {
+                  return new Padding(
+                    padding: EdgeInsets.only(left: 20.0, top: 14.0, bottom: 12.0),
+                    child: Text(
+                      '今日热闻',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  );
+                } else {
+                  return SizedBox(
+                    width: 1,
+                  );
+                }
+              },
+            ),
+    );
+  }
+
+  Widget getItemWidget(BuildContext context, int pos) {
+    return new Card(
+      elevation: 0.7,
+      margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 4.0),
+      child: FlatButton(
+        onPressed: () {
+          _onItemClick(pos);
+        },
+        child: IntrinsicHeight(
+          child: Container(
+            height: 110.0,
+            padding:
+                EdgeInsets.only(left: 2.0, top: 12.0, right: 2.0, bottom: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.62,
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    model.latestDailyBean.stories[pos].title,
+                    style: new TextStyle(
+                      color: Colors.black,
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    softWrap: true,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                AspectRatio(
+                  aspectRatio: 10 / 9,
+                  child: Image.network(
+                    model.latestDailyBean.stories[pos].images[0],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  void _onItemClick(int pos) {}
+
+  Widget getItemBottomWidget(int pos) {
+    return IntrinsicHeight(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Expanded(
+              child: Text(
+            "type${model.latestDailyBean.stories[pos].type}",
+            style: TextStyle(
+                color: Color(0xff979797),
+                fontSize: 12.0,
+                decoration: TextDecoration.none),
+          )),
+          Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Color(0xfff1f1f1)),
+                    borderRadius: BorderRadius.circular(3.0)),
+                color: Color(0xfff1f1f1)),
+            child: Text(
+              "type${model.latestDailyBean.stories[pos].type}",
+              style: TextStyle(
+                  color: Color(0xff979797),
+                  fontSize: 12.0,
+                  decoration: TextDecoration.none),
+            ),
+          ),
+        ],
       ),
     );
   }
