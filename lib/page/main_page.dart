@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zhihu_daily/model/main_model.dart';
 import 'package:zhihu_daily/widget/list_page.dart';
 
@@ -170,9 +171,7 @@ class MainPage extends StatelessWidget {
                     height: MediaQuery.of(context).size.width * 9 / 16,
                     child: TransformerPageView(
                       loop: true,
-                      itemCount: model.latestDailyBean == null
-                          ? 0
-                          : model.latestDailyBean.topStories.length,
+                      itemCount: model?.latestDailyBean?.topStories?.length ?? 0,
                       itemBuilder: (context, index) {
                         return Container(
                           alignment: Alignment.topCenter,
@@ -188,7 +187,8 @@ class MainPage extends StatelessWidget {
                   );
                 } else if (position == 1) {
                   return new Padding(
-                    padding: EdgeInsets.only(left: 20.0, top: 14.0, bottom: 12.0),
+                    padding:
+                        EdgeInsets.only(left: 20.0, top: 14.0, bottom: 12.0),
                     child: Text(
                       '今日热闻',
                       style: TextStyle(
@@ -253,7 +253,14 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  void _onItemClick(int pos) {}
+  void _onItemClick(int pos) async {
+    String url = model.latestDailyBean.stories[pos].url;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   Widget getItemBottomWidget(int pos) {
     return IntrinsicHeight(
