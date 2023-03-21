@@ -25,7 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   #网络请求
-  dio: ^2.1.2
+  dio: ">=2.1.2 <6.0.0"
   #状态管理
   provider: ^3.0.0+1
   json_serializable: ^3.2.2
